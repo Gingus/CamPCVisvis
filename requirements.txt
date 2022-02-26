@@ -1,0 +1,6 @@
+imageio==2.16.0
+imageio-ffmpeg==0.4.5
+Pillow==9.0.1
+pygubu==0.11
+pygubu-designer==0.17
+visvis==1.12.4
