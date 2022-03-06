@@ -1,23 +1,10 @@
-# Alejandro Autalán - Pygubu
-# Almar Klein - Visvis
-# Imageio Requirements
-#   Python 3.7+
-#   NumPy >=1.20.0
-#   Pillow >= 8.3.2
-
-# Visvis Requirements
-#   imageio-ffmpeg (for working with video files)
-# encoding: utf8
-# test3.ui is built and editable with pygubu-designer
 from __future__ import unicode_literals
 import sys
 import os
 import pygubu
 import imageio
-import visvis as vv  # New
-# Imageio, Visvis & ffmpeg need installing with pip
-#import picamera
-from time import sleep
+# import visvis as vv  # New
+# from time import sleep
 from PIL import Image, ImageTk
 
 
@@ -30,18 +17,15 @@ except:
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '../'))
 
+
 class Myapp:
     def __init__(self, master):
         self.master = master
         self.builder = builder = pygubu.Builder()
-        #call from the current file path then "filename.ui"
-        fpath = os.path.join(os.path.dirname(__file__),"test3.ui")
+        fpath = os.path.join(os.path.dirname(__file__), "test3.ui")
         builder.add_from_file(fpath)
-        #mainwindow is the name/ID in pygubu of the main ttk.Frame
-        #that contains all the other widgets
         mainwindow = builder.get_object('mainwindow', master)
         builder.connect_callbacks(self)
-        #self.set_scrollbars()
 
 ###################
 
@@ -75,11 +59,11 @@ class Myapp:
         """Pressing the buton activates and displays the laptops self facing
         camera"""
         label = self.builder.get_object('Label_Feed')
-        #print("Got Label_Feed")
-        video_name = '<video0>'# <video1> will be back camera/usb port cam
-        #print("got web cam")
+        # print("Got Label_Feed")
+        video_name = '<video0>'  # <video1> will be back camera/usb port cam
+        # print("got web cam")
         video = imageio.get_reader(video_name)
-        #print("got vid from imageio")
+        # print("got vid from imageio")
 
 
         for image in video.iter_data():
