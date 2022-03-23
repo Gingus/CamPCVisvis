@@ -27,7 +27,7 @@ class Myapp:
         fpath = os.path.join(os.path.dirname(__file__), "test3.ui")
         builder.add_from_file(fpath)
         mainwindow = builder.get_object('mainwindow', master)
-        self.is_on = None
+        self.is_on = False
 
         builder.connect_callbacks(self)
         builder.import_variables(self, 'is_on')
@@ -35,18 +35,20 @@ class Myapp:
     def on_Button_Show_clicked(self):
         """pressing the button to change between the puppy image
         and a self facing video feed"""
-        puppy_image = 'C:\\Users\\gingu\\Desktop\\Gubu Saves\\CamPCVisvis\\asleep_puppy.jpg'
+        puppy_image = 'C:\\Users\\pminard\\Desktop\\Gubu\\CamPCVisvis\\Puppies.jpg'
         off_image = Image.open(puppy_image)
         off_image_update = off_image.resize((450, 350), Image.ANTIALIAS)
         # label = self.builder.get_object('labelPicture')
         label = self.builder.get_object('Label_Feed')
-
+        self.is_on = not self.is_on
         if self.is_on:
             # label = self.builder.get_object('Label_Feed')
             video_name = '<video0>'
             video = imageio.get_reader(video_name)
 
             for image in video.iter_data():
+                if(not self.is_on):
+                    break
                 """video feed for the label"""
                 image_on = ImageTk.PhotoImage(Image.fromarray(image))
                 # frame_image = ImageTk.PhotoImage(Image.fromarray(image))
@@ -55,8 +57,8 @@ class Myapp:
                 label.config(image=image_on)
                 # label.config(image=video)
                 label.image = image_on
-                print("label config (image_on)")
-                self.is_on = False
+                # print("label config (image_on)")
+                # self.is_on = False
                 label.update()
 
         else:
@@ -65,7 +67,7 @@ class Myapp:
             show_image_off = ImageTk.PhotoImage(off_image_update)
             label.configure(image=show_image_off)
             label.image = show_image_off
-            self.is_on = True
+            # self.is_on = True
             print(self.is_on)
         label.update()
             
