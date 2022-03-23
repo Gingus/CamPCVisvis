@@ -4,11 +4,10 @@ import sys
 import os
 import pygubu
 import imageio
-import visvis as vv #New
-#import picamera
-from time import sleep
+import visvis as vv  # New
+# import picamera
+# from time import sleep
 from PIL import Image, ImageTk
-
 
 try:
     import tkinter as tk
@@ -28,22 +27,47 @@ class Myapp:
         fpath = os.path.join(os.path.dirname(__file__), "test3.ui")
         builder.add_from_file(fpath)
         mainwindow = builder.get_object('mainwindow', master)
+        self.is_on = None
+
         builder.connect_callbacks(self)
+        builder.import_variables(self, 'is_on')
 
     def on_Button_Show_clicked(self):
-        """When the button is clicked the self facing webcam is turned on and displayed"""
+        """pressing the button to change between the puppy image
+        and a self facing video feed"""
+        puppy_image = 'C:\\Users\\gingu\\Desktop\\Gubu Saves\\CamPCVisvis\\asleep_puppy.jpg'
+        off_image = Image.open(puppy_image)
+        off_image_update = off_image.resize((450, 350), Image.ANTIALIAS)
+        # label = self.builder.get_object('labelPicture')
         label = self.builder.get_object('Label_Feed')
-        video_name = '<video0>'  # 'video diary part#2.mpg'
-        video = imageio.get_reader(video_name)
 
-        for image in video.iter_data():
-            """video feed for the label"""
-            frame_image = ImageTk.PhotoImage(Image.fromarray(image))
-            # print("image from array")
-            label.config(image=frame_image)
-            # print("label config (frame image)")
-            label.update()
-            # print("label Packed")
+        if self.is_on:
+            # label = self.builder.get_object('Label_Feed')
+            video_name = '<video0>'
+            video = imageio.get_reader(video_name)
+
+            for image in video.iter_data():
+                """video feed for the label"""
+                image_on = ImageTk.PhotoImage(Image.fromarray(image))
+                # frame_image = ImageTk.PhotoImage(Image.fromarray(image))
+                # print("image from array")
+                # label.config(image=frame_image)
+                label.config(image=image_on)
+                # label.config(image=video)
+                label.image = image_on
+                print("label config (image_on)")
+                self.is_on = False
+                label.update()
+
+        else:
+            # stop the video feed
+            # see note at bottom
+            show_image_off = ImageTk.PhotoImage(off_image_update)
+            label.configure(image=show_image_off)
+            label.image = show_image_off
+            self.is_on = True
+            print(self.is_on)
+        label.update()
             
     def on_Button_Update_Tilt_clicked(self):
         """Used to update the tilt servos upper and lower limits"""
@@ -103,3 +127,13 @@ if __name__ == '__main__':
 
 # Note: To set the slider variables try self.slider.set(100) OR
 # self.slider.From_.set(100)/self.slider.To:.set(100) maybe
+
+# root = tk.Tk()
+#     my_label = tk.Label(root)
+#     my_label.pack()
+#     thread = threading.Thread(target=stream, args=(my_label,))
+#     thread.daemon = 1
+#     thread.start()
+#     root.mainloop()
+
+# Also see https://stackoverflow.com/questions/36635567/tkinter-inserting-video-into-window
